@@ -9,8 +9,8 @@ namespace AdventOfCode
 {
     public class Day1
     {
+        #region Day 1 - Part 1
         string[] input = File.ReadAllLines("../../../Day_1/Day1Input.txt");
-        //string[] input = { "a23aee2", "sad76lk1ælæ3" };
         string collection;
         int result;
 
@@ -31,7 +31,7 @@ namespace AdventOfCode
                         chars.Add(item);
                     }
                 }
-
+                //Seperates with a comma.
                 collection += chars[0].ToString() + "" + chars[chars.Count() - 1].ToString() + ",";
             }
             string[] resArr = collection.Split(',');
@@ -40,7 +40,8 @@ namespace AdventOfCode
                 Int32.TryParse(item, out int val);
                 result += val;
             }
-            Console.WriteLine(result);
+            Console.WriteLine("Day 1, Part 1: " + result);
         }
+        #endregion
     }
 }
