@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,6 +70,70 @@ namespace AdventOfCode.Day_2
                 }
             }
             Console.WriteLine($"Day 2, Part 1: {validGames}"); ///2551
+
+
+
+            //Day 2, Part 2. 
+            //The power of a set of cubes is equal to the numbers of red, green, and blue cubes multiplied together.
+            //For each game, find the minimum set of cubes that must have been present. What is the sum of the power of these sets?
+
+            int result = 0;
+            int endValue = 0;
+            foreach (var game in input)
+            {
+                int rColor = 0;
+                int gColor = 0;
+                int bColor = 0;
+
+                //Gets the specific set
+                foreach (var set in game.Split(": ")[1].Split(";"))
+                {
+                    foreach (var cube in set.Split(", "))
+                    {
+                        //Splits the Number from the color.
+                        string[] singular = cube.TrimStart().Split(' ');
+
+                        //Checks the color.
+                        if (singular[1] == "blue")
+                        {
+                            Int32.TryParse(cube.TrimStart().Split(" ")[0], out int blue);
+                            bColor = compareColor(blue, bColor);
+                        }
+                        if (singular[1] == "red")
+                        {
+                            Int32.TryParse(cube.TrimStart().Split(" ")[0], out int red);
+                            rColor = compareColor(red, rColor);
+                        }
+                        if (singular[1] == "green")
+                        {
+                            Int32.TryParse(cube.TrimStart().Split(" ")[0], out int green);
+                            gColor = compareColor(green, gColor);
+                        }
+                    }
+                }
+                result = rColor * gColor * bColor;
+                endValue += result;
+            }
+            Console.WriteLine($"Day 2, Part 2: {endValue}"); ///2551
+        }
+
+        /// <summary>
+        /// Compares the first number given, to the second.
+        /// </summary>
+        /// <param name="currentNumber"></param>
+        /// <param name="comparedNumber"></param>
+        /// <returns>Returns the higher number.</returns>
+        int compareColor(int currentNumber, int comparedNumber)
+        {
+            if (currentNumber < comparedNumber)
+            {
+                currentNumber = comparedNumber;
+                return currentNumber;
+            }
+            else
+            {
+                return currentNumber;
+            }
         }
     }
 }
