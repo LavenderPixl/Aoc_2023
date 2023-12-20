@@ -12,13 +12,13 @@ namespace AdventOfCode.Day_3
     internal class Day3
     {
         //Each line has 140 characters.
-        //string[] input = File.ReadAllLines("../../../Day_3/Day3Input.txt");
-        string[] _input =
-        {
-            "467..114..", "...*......", "..35..633.", "......#...", "617*......", ".....+.58.", "..592.....",
-            "......755.",
-            "...$.*....", ".664.598.."
-        };
+        string[] _input = File.ReadAllLines("../../../Day_3/Day3Input.txt");
+        // string[] _input =
+        // {
+        //     "467..114..", "...*.../..", "..35..633.", "......#...", "617*......", ".....+.58.", "..592.....",
+        //     "......755.",
+        //     "...$.*....", ".664.598.."
+        // };
 
         private int _row = 0;
         private ObservableCollection<Numbers> _valueCollection = new ObservableCollection<Numbers>();
@@ -30,7 +30,8 @@ namespace AdventOfCode.Day_3
             foreach (var line in _input)
             {
                 Regex numberCheck = new Regex(@"\d+");
-                Regex symbolCheck = new Regex(@"[^.-A-Za-z0-9_ ]");
+                // Regex symbolCheck = new Regex(@"[^.-A-Za-z0-9_ \s=]");
+                Regex symbolCheck = new Regex(@"[^a-zA-Z0-9\.\s]");
                 foreach (Match match in numberCheck.Matches(line))
                 {
                     if (match.Success)
@@ -53,26 +54,60 @@ namespace AdventOfCode.Day_3
 
                 _row++;
             }
-            
+
             foreach (var numbers in _valueCollection)
             {
-                int[] _numberRange = Enumerable.Range(numbers.StartIndex, numbers.Value.Length).ToArray();
+                int[] _numberRange = Enumerable.Range(numbers.StartIndex - 1, numbers.Value.Length + 2).ToArray();
+                int check = 0;
 
                 foreach (var symbols in _symbolCollection)
                 {
                     if (numbers.Row == (symbols.Row - 1) || numbers.Row == symbols.Row ||
                         numbers.Row == (symbols.Row + 1))
                     {
-                        int[] _symbolRange = Enumerable.Range(symbols.StartIndex - 1, 3).ToArray();
+                        int[] _symbolRange = Enumerable.Range(symbols.StartIndex, symbols.Value.Length)
+                            .ToArray();
 
-                        if (!_numberRange.Intersect(_symbolRange).Any())
+                        if (!_numberRange.Any(x => _symbolRange.Any(y => y == x)))
                         {
-                            _finalCollection.Add(Convert.ToInt32(numbers.Value));
-                            Console.WriteLine(numbers.Value);
+                            foreach (var symbol in _symbolCollection)
+                            {
+                                if (numbers.Row == (symbols.Row - 1) || numbers.Row == symbols.Row ||
+                                    numbers.Row == (symbols.Row + 1))
+                                {
+                                    if (_numberRange.Any(x => _symbolRange.Any(y => y == x)))
+                                    {
+                                        check++;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            check++;
+                            break;
                         }
                     }
                 }
+
+                if (check != 0)
+                {
+                    _finalCollection.Add(Convert.ToInt32(numbers.Value));
+                }
             }
+
+            int result = 0;
+            foreach (var numb in _finalCollection)
+            {
+                result += numb;
+            }
+
+            Console.WriteLine(result);
         }
     }
 
